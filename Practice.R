@@ -23,11 +23,13 @@ sd(data$ideal)
 
 #Bivariate
 
-cor.test(data$ideal, data$height, method = "pearson")
-
-cor.test(data$ideal, data$height, method = "kendall")
+cor.test(data$ideal, data$height, use = pairwise.complete.obs, method = c("pearson", "kendall", "spearman"))
 
 #Multivariate
+
+as.factor(data$gender)
+
+cor(data, method = "pearson")
 
 #Most Correlated
 
@@ -48,9 +50,28 @@ mosthighlycorrelated <- function(mydataframe,numtoreport)
 }
  mosthighlycorrelated(data[2:8], 15)
 
- #ANOVA
+#ANOVA
  
+#One-Way Anova (Between Subjects, does gender predict height overall?)
  
- 
+fit1 <- aov(height ~ gender, data = data)
+summary(fit1)
 
+#Three-Way Anova (Between Subjects, does gender, armspan, and leg length predict height overall?)
+
+fit2 <- aov(height ~ gender * armspan * forearm, data = data)
+summary(fit2)
+
+#One-Way Anova (Within Subjects, does gender predict height for each participant?)
+
+subject <- c(1:531)
+
+data2 <- cbind(data, subject)
+
+fit3 <- aov(height ~ as.factor(gender) + Error(subject/as.factor(gender)), data = data2)
+summary(fit3)
+
+#Three-Way Anove (Within Subjects, does gender, armspan, and leg length predict height for each participant?)
+
+fit4 <- aov(height ~ )
 
